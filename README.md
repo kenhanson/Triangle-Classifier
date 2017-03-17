@@ -25,7 +25,7 @@ Then install Triangle Classifier with the following Maven command:
 
 This command will remove (clean) the prior build if it exists, then build the program and run the Junit tests. All dependency libraries are included in the executable jar file **triangle-classifier-0.0.1-SNAPSHOT-jar-with-dependencies.jar** which is the end result of the build.
     
-### Running Triangle Classifier
+## Running Triangle Classifier
 
 Navigate to the **C:\projects\Triangle-Classifier-master\Triangle-Classifier-master\triangle-classifier\target** directory at a command prompt. Then run Triangle Classifier with the following command which is followed by three arguement values representing the three triangle side lengths of the triangle to classify. For this example the side lengths are 1.5, 1.5 and 1.5:
 
