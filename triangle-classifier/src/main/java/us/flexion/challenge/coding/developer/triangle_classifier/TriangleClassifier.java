@@ -7,201 +7,169 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import us.flexion.challenge.coding.developer.triangle_classifier.exception.InvalidArguementsException;
+import us.flexion.challenge.coding.developer.triangle_classifier.shape.ShapeSide;
+import us.flexion.challenge.coding.developer.triangle_classifier.shape.Triangle;
+import us.flexion.challenge.coding.developer.triangle_classifier.shape.TriangleClassificationEnum;
+import us.flexion.challenge.coding.developer.triangle_classifier.util.ConversionUtil;
+import us.flexion.challenge.coding.developer.triangle_classifier.util.MessageFormatter;
 
 public class TriangleClassifier {
 
-    private static Logger logger = LogManager
-            .getLogger(TriangleClassifier.class);
+	private static Logger logger = LogManager.getLogger(TriangleClassifier.class);
+	private static final int NUMBER_OF_EXPECTED_ARGUEMENTS = 3;
 
-    private static final String OS_INDEPENDENT_CARRIAGE_RETURN = String.format(
-            "%n", (Object[]) null);
+	public static void main(String[] args) throws InvalidArguementsException {
 
-    private static final int NUMBER_OF_EXPECTED_ARGUEMENTS = 3;
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
 
-    public static void main(String[] args) throws InvalidArguementsException {
+		try {
 
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
+			triangleClassifier.runMain(args);
+		}
 
-        try {
+		catch (InvalidArguementsException e) {
 
-            triangleClassifier.runMain(args);
-        }
+			logger.error(e);
+		}
+	}
 
-        catch (InvalidArguementsException e) {
+	protected void runMain(String[] arguements) throws InvalidArguementsException {
 
-            logger.error(e);
-        }
-    }
+		// Validate the arguments.
 
-    protected void runMain(String[] arguements)
-            throws InvalidArguementsException {
+		if (!areArguementsValid(arguements)) {
 
-        if (!areArguementsValid(arguements)) {
+			StringBuilder stringBuilder = MessageFormatter.formatInvalidArguementsExceptionMessage(arguements);
 
-            StringBuilder stringBuilder = new StringBuilder();
+			throw new InvalidArguementsException(stringBuilder.toString());
+		}
 
-            stringBuilder.append("The specified values are invalid.");
-            stringBuilder.append(OS_INDEPENDENT_CARRIAGE_RETURN);
-            stringBuilder.append(formatArguements(arguements));
-            stringBuilder.append(OS_INDEPENDENT_CARRIAGE_RETURN);
-            stringBuilder.append(formatUsage());
+		// The arguments cannot be null at this point.
 
-            throw new InvalidArguementsException(stringBuilder.toString());
-        }
+		Triangle triangle = new Triangle((double) Double.parseDouble(arguements[0]),
+				(double) Double.parseDouble(arguements[1]), (double) Double.parseDouble(arguements[2]));
 
-        List<Double> values = new ArrayList<Double>();
+		triangle.setTriangleClassificationEnum(this.generateTriangleClassificationEnum(triangle));
 
-        for (int i = 0; i < arguements.length; i++) {
-            values.add((double) Double.parseDouble(arguements[i]));
-        }
+		// This is the program output.
 
-        String classification = getTriangleClassification(values);
+		logger.info(triangle.getTriangleClassificationEnum().getClassification());
+	}
 
-        logger.info(classification);
-    }
+	protected TriangleClassificationEnum generateTriangleClassificationEnum(Triangle triangle)
+			throws InvalidArguementsException {
 
-    protected String getTriangleClassification(List<Double> values) {
+		List<Double> sideLengthValues = ConversionUtil.convertShapeSidesToList(triangle);
+		int numberOfRepeatedValues = 0;
 
-        int numberOfRepeatedValues = 0;
+		for (Double sideLengthValue : sideLengthValues) {
 
-        for (Double value : values) {
+			// Validate that the side length value is not null.
 
-            logger.debug("value = [" + value + "].");
-            double totalOfOtherValues = 0;
-            int currentNumberOfRepeatedValues = 0;
+			if (sideLengthValue == null) {
 
-            for (Double otherValue : values) {
+				String[] convertedSideLengthValues = ConversionUtil.convertShapeSideLengthsToArray(triangle);
 
-                // Make sure not to compare the object to itself
+				StringBuilder fomattedSideLengthValuesForExceptionMessage = MessageFormatter
+						.formatInvalidArguementsExceptionMessage(convertedSideLengthValues);
 
-                if (otherValue != value) {
+				throw new InvalidArguementsException(fomattedSideLengthValuesForExceptionMessage.toString());
+			}
 
-                    logger.debug("Other value = [" + otherValue + "].");
-                    totalOfOtherValues += otherValue;
+			logger.debug("side length value = [" + sideLengthValue + "].");
+			double totalOfOtherValues = 0;
+			int currentNumberOfRepeatedValues = 0;
 
-                    if (otherValue.doubleValue() == value.doubleValue()) {
+			// The side length value cannot be null at this point.
 
-                        logger.debug("Other value is equal.");
-                        currentNumberOfRepeatedValues++;
-                    }
-                }
-            }
+			for (Double otherValue : sideLengthValues) {
 
-            logger.debug("Total of other values = [" + totalOfOtherValues
-                    + "].");
+				// Make sure not to compare the object to itself, and if it is
+				// the same object skip it.
 
-            logger.debug("Current number of repeated values = ["
-                    + currentNumberOfRepeatedValues + "].");
+				if (otherValue != sideLengthValue) {
 
-            logger.debug("Number of repeated values = ["
-                    + numberOfRepeatedValues + "].");
+					logger.debug("Other side length value = [" + otherValue + "].");
+					totalOfOtherValues += otherValue;
 
-            if (currentNumberOfRepeatedValues > numberOfRepeatedValues) {
+					if (otherValue.doubleValue() == sideLengthValue.doubleValue()) {
 
-                numberOfRepeatedValues = currentNumberOfRepeatedValues;
-            }
+						logger.debug("The other side length value is equal.");
+						currentNumberOfRepeatedValues++;
+					}
+				}
+			}
 
-            // I've decided that a triangle with an angle of zero degrees
-            // is still a triangle. It has an area of zero and on paper
-            // it is a line segment, but the three angles add up to 180 degrees
-            // and in the real world the connection of the three sides can be
-            // made mechanically.
+			logger.debug("Total of other side length values = [" + totalOfOtherValues + "].");
 
-            if (value > totalOfOtherValues) {
+			logger.debug("Current number of repeated values = [" + currentNumberOfRepeatedValues + "].");
 
-                return TriangleClassificationEnum.NOT_A_TRIANGLE
-                        .getClassification();
-            }
-        }
+			logger.debug("Number of repeated values = [" + numberOfRepeatedValues + "].");
 
-        if (numberOfRepeatedValues == (TriangleClassificationEnum.EQUILATERAL
-                .getNumberOfEqualSides() - 1)) {
+			if (currentNumberOfRepeatedValues > numberOfRepeatedValues) {
 
-            return TriangleClassificationEnum.EQUILATERAL.getClassification();
-        }
+				numberOfRepeatedValues = currentNumberOfRepeatedValues;
+			}
 
-        if (numberOfRepeatedValues == (TriangleClassificationEnum.ISOCSCELES
-                .getNumberOfEqualSides() - 1)) {
+			// I've decided that for this iteration, a triangle with an angle of
+			// zero degrees is still a triangle. It has an area of zero and on
+			// paper it is a line segment, but the three angles add up to 180
+			// degrees and in the real world the connection of the three sides
+			// can be made mechanically. From research it seems that this is an
+			// assumption so a decision needs to be made by the stakeholders.
 
-            return TriangleClassificationEnum.ISOCSCELES.getClassification();
-        }
+			if (sideLengthValue > totalOfOtherValues) {
 
-        return TriangleClassificationEnum.SCALENE.getClassification();
-    }
+				return TriangleClassificationEnum.NOT_A_TRIANGLE;
+			}
+		}
 
-    protected boolean areArguementsValid(String[] arguements) {
+		if (numberOfRepeatedValues == (TriangleClassificationEnum.EQUILATERAL.getNumberOfEqualSides() - 1)) {
 
-        if (arguements.length != NUMBER_OF_EXPECTED_ARGUEMENTS) {
+			return TriangleClassificationEnum.EQUILATERAL;
+		}
 
-            logger.error("Invalid number of values. Number of values specified = ["
-                    + arguements.length
-                    + "], number of values expected = ["
-                    + NUMBER_OF_EXPECTED_ARGUEMENTS + "].");
+		if (numberOfRepeatedValues == (TriangleClassificationEnum.ISOCSCELES.getNumberOfEqualSides() - 1)) {
 
-            return false;
+			return TriangleClassificationEnum.ISOCSCELES;
+		}
 
-        }
+		return TriangleClassificationEnum.SCALENE;
+	}
 
-        for (int i = 0; i < arguements.length; i++) {
+	protected boolean areArguementsValid(String[] arguements) {
 
-            try {
+		if (arguements.length != NUMBER_OF_EXPECTED_ARGUEMENTS) {
 
-                if (Double.parseDouble(arguements[i]) <= 0) {
+			logger.error("Invalid number of values. Number of values specified = [" + arguements.length
+					+ "], number of values expected = [" + NUMBER_OF_EXPECTED_ARGUEMENTS + "].");
 
-                    logger.error("The specified value [" + arguements[i]
-                            + "] for side #[" + (i + 1)
-                            + "] must be greater than zero.");
+			return false;
 
-                    return false;
-                }
-            }
+		}
 
-            catch (NumberFormatException e) {
+		for (int i = 0; i < arguements.length; i++) {
 
-                logger.error("The specified value [" + arguements[i]
-                        + "] for side #[" + (i + 1) + "] is not a number.");
+			try {
 
-                return false;
-            }
-        }
+				if (Double.parseDouble(arguements[i]) <= 0) {
 
-        return true;
-    }
+					logger.error("The specified value [" + arguements[i] + "] for side #[" + (i + 1)
+							+ "] must be greater than zero.");
 
-    protected String formatArguements(String[] arguements) {
+					return false;
+				}
+			}
 
-        StringBuilder stringBuilder = new StringBuilder();
+			catch (NumberFormatException e) {
 
-        for (int i = 0; i < arguements.length; i++) {
+				logger.error(
+						"The specified value [" + arguements[i] + "] for side #[" + (i + 1) + "] is not a number.");
 
-            if (stringBuilder.length() > 0) {
+				return false;
+			}
+		}
 
-                stringBuilder.append(OS_INDEPENDENT_CARRIAGE_RETURN);
-            }
-
-            stringBuilder.append("Specified length for side #[" + (i + 1)
-                    + "] = [" + arguements[i] + "].");
-        }
-
-        return stringBuilder.toString();
-    }
-
-    protected String formatUsage() {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(OS_INDEPENDENT_CARRIAGE_RETURN);
-
-        stringBuilder
-                .append("Usage: java -jar [path]triangle-classifier-0.0.1-SNAPSHOT-jar-with-dependencies.jar [length of side one] [length of side two] [length of side three]");
-
-        stringBuilder.append(OS_INDEPENDENT_CARRIAGE_RETURN);
-        stringBuilder.append(OS_INDEPENDENT_CARRIAGE_RETURN);
-
-        stringBuilder
-                .append("       NOTE: All three arguements for triangle side lengths are required and must be numbers greater than zero.");
-
-        stringBuilder.append(OS_INDEPENDENT_CARRIAGE_RETURN);
-
-        return stringBuilder.toString();
-    }
+		return true;
+	}
 }

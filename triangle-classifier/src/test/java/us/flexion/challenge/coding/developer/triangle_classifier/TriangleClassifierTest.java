@@ -3,390 +3,435 @@ package us.flexion.challenge.coding.developer.triangle_classifier;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import us.flexion.challenge.coding.developer.triangle_classifier.exception.InvalidArguementsException;
+import us.flexion.challenge.coding.developer.triangle_classifier.shape.Triangle;
+import us.flexion.challenge.coding.developer.triangle_classifier.shape.TriangleClassificationEnum;
 
 public class TriangleClassifierTest {
+	
+	private static Logger logger = LogManager.getLogger(TriangleClassifierTest.class);
 
-    @Test
-    public void testEquilateral() {
-
-        // Assign
-        double sideOne = 10;
-        double sideTwo = 10;
-        double sideThree = 10;
-
-        List<Double> values = new ArrayList<Double>();
-        values.add(sideOne);
-        values.add(sideTwo);
-        values.add(sideThree);
-
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
-
-        // Act
-        String shouldBeEquilateral = triangleClassifier
-                .getTriangleClassification(values);
-
-        // Assert
-        assertTrue(shouldBeEquilateral
-                .equals(TriangleClassificationEnum.EQUILATERAL
-                        .getClassification()));
-    }
-
-    @Test
-    public void testIsoscelesOne() {
+	@Test
+	public void testEquilateral() {
 
-        // Assign
-        double sideOne = 8;
-        double sideTwo = 10;
-        double sideThree = 10;
-
-        List<Double> values = new ArrayList<Double>();
-        values.add(sideOne);
-        values.add(sideTwo);
-        values.add(sideThree);
-
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
+		// Assign
 
-        // Act
-        String shouldBeIsocsceles = triangleClassifier
-                .getTriangleClassification(values);
+		double sideLengthA = 10;
+		double sideLengthB = 10;
+		double sideLengthC = 10;
 
-        // Assert
-        assertTrue(shouldBeIsocsceles
-                .equals(TriangleClassificationEnum.ISOCSCELES
-                        .getClassification()));
-    }
-
-    @Test
-    public void testIsoscelesTwo() {
-
-        // Assign
-        double sideOne = 10;
-        double sideTwo = 0.8;
-        double sideThree = 10.0;
-
-        List<Double> values = new ArrayList<Double>();
-        values.add(sideOne);
-        values.add(sideTwo);
-        values.add(sideThree);
-
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
-
-        // Act
-        String shouldBeIsocsceles = triangleClassifier
-                .getTriangleClassification(values);
-
-        // Assert
-        assertTrue(shouldBeIsocsceles
-                .equals(TriangleClassificationEnum.ISOCSCELES
-                        .getClassification()));
-    }
-
-    @Test
-    public void testIsoscelesThree() {
-
-        // Assign
-        double sideOne = 10;
-        double sideTwo = 10;
-        double sideThree = 8;
-
-        List<Double> values = new ArrayList<Double>();
-        values.add(sideOne);
-        values.add(sideTwo);
-        values.add(sideThree);
-
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
-
-        // Act
-        String shouldBeIsocsceles = triangleClassifier
-                .getTriangleClassification(values);
-
-        // Assert
-        assertTrue(shouldBeIsocsceles
-                .equals(TriangleClassificationEnum.ISOCSCELES
-                        .getClassification()));
-    }
-
-    @Test
-    public void testScalene() {
-
-        // Assign
-        double sideOne = 8;
-        double sideTwo = 9;
-        double sideThree = 10;
+		Triangle triangle = new Triangle(sideLengthA, sideLengthB, sideLengthC);
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
 
-        List<Double> values = new ArrayList<Double>();
-        values.add(sideOne);
-        values.add(sideTwo);
-        values.add(sideThree);
-
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
-
-        // Act
-        String shouldBeScalene = triangleClassifier
-                .getTriangleClassification(values);
-
-        // Assert
-        assertTrue(shouldBeScalene.equals(TriangleClassificationEnum.SCALENE
-                .getClassification()));
-    }
-
-    @Test
-    public void testNotATriangle() {
-
-        // Assign
-        double sideOne = 8;
-        double sideTwo = 9;
-        double sideThree = 100;
-
-        List<Double> values = new ArrayList<Double>();
-        values.add(sideOne);
-        values.add(sideTwo);
-        values.add(sideThree);
-
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
+		// Act
 
-        // Act
-        String shouldBeNotATriangle = triangleClassifier
-                .getTriangleClassification(values);
+		String shouldBeEquilateral = null;
 
-        // Assert
-        assertTrue(shouldBeNotATriangle
-                .equals(TriangleClassificationEnum.NOT_A_TRIANGLE
-                        .getClassification()));
-    }
-    
-    @Test
-    public void testAreaOfZeroIsATriangle() {
+		try {
 
-        // Assign
-        double sideOne = 1;
-        double sideTwo = 2;
-        double sideThree = 3;
+			shouldBeEquilateral = triangleClassifier.generateTriangleClassificationEnum(triangle).getClassification();
+		}
 
-        List<Double> values = new ArrayList<Double>();
-        values.add(sideOne);
-        values.add(sideTwo);
-        values.add(sideThree);
+		catch (InvalidArguementsException e) {
 
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
+			boolean shouldBeTrueAndFail = true;
+			assertFalse(shouldBeTrueAndFail);
+		}
 
-        // Act
-        String shouldBeScalene = triangleClassifier
-                .getTriangleClassification(values);
+		// Assert
 
-        // Assert
-        assertTrue(shouldBeScalene
-                .equals(TriangleClassificationEnum.SCALENE
-                        .getClassification()));
-    }
+		assertTrue(shouldBeEquilateral.equals(TriangleClassificationEnum.EQUILATERAL.getClassification()));
+	}
 
-    @Test
-    public void testZeroShouldNotBeATriangle() {
+	@Test
+	public void testIsoscelesOne() {
 
-        // Assign
-        double sideOne = 8;
-        double sideTwo = 9;
-        double sideThree = 0;
+		// Assign
 
-        List<Double> values = new ArrayList<Double>();
-        values.add(sideOne);
-        values.add(sideTwo);
-        values.add(sideThree);
+		double sideLengthA = 8;
+		double sideLengthB = 10;
+		double sideLengthC = 10;
 
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
+		Triangle triangle = new Triangle(sideLengthA, sideLengthB, sideLengthC);
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
 
-        // Act
-        String shouldBeNotATriangle = triangleClassifier
-                .getTriangleClassification(values);
-    }
+		// Act
 
-    @Test
-    public void testIncorrectNumberOfValuesShouldNotBeATriangle() {
+		String shouldBeIsocsceles = null;
 
-        // Assign
-        double sideOne = 8;
-        double sideTwo = 9;
+		try {
 
-        List<Double> values = new ArrayList<Double>();
-        values.add(sideOne);
-        values.add(sideTwo);
+			shouldBeIsocsceles = triangleClassifier.generateTriangleClassificationEnum(triangle).getClassification();
+		}
 
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
+		catch (InvalidArguementsException e) {
 
-        // Act
-        String shouldBeNotATriangle = triangleClassifier
-                .getTriangleClassification(values);
+			boolean shouldBeTrueAndFail = true;
+			assertFalse(shouldBeTrueAndFail);
+		}
 
-        // Assert
-        assertTrue(shouldBeNotATriangle
-                .equals(TriangleClassificationEnum.NOT_A_TRIANGLE
-                        .getClassification()));
-    }
+		// Assert
 
-    @Test
-    public void testValidatorSuccess() {
+		assertTrue(shouldBeIsocsceles.equals(TriangleClassificationEnum.ISOCSCELES.getClassification()));
+	}
 
-        // Assign
-        final String sideOne = "8";
-        final String sideTwo = "9";
-        final String sideThree = "10";
+	@Test
+	public void testIsoscelesTwo() {
 
-        String[] values = new String[3];
-        values[0] = sideOne;
-        values[1] = sideTwo;
-        values[2] = sideThree;
+		// Assign
 
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
+		double sideLengthA = 10;
+		double sideLengthB = 0.8;
+		double sideLengthC = 10.0;
 
-        // Act
-        boolean shouldBeTrue = false;
+		Triangle triangle = new Triangle(sideLengthA, sideLengthB, sideLengthC);
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
 
-        shouldBeTrue = triangleClassifier.areArguementsValid(values);
+		// Act
 
-        // Assert
-        assertTrue(shouldBeTrue);
-    }
+		String shouldBeIsocsceles = null;
 
-    @Test
-    public void testValidatorWithZero() {
+		try {
 
-        // A logger error message will be generated.
+			shouldBeIsocsceles = triangleClassifier.generateTriangleClassificationEnum(triangle).getClassification();
+		}
 
-        // Assign
-        final String sideOne = "8";
-        final String sideTwo = "9";
-        final String sideThree = "0";
+		catch (InvalidArguementsException e) {
 
-        String[] values = new String[3];
-        values[0] = sideOne;
-        values[1] = sideTwo;
-        values[2] = sideThree;
+			boolean shouldBeTrueAndFail = true;
+			assertFalse(shouldBeTrueAndFail);
+		}
 
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
+		// Assert
 
-        // Act
-        boolean shouldBeFalse = true;
+		assertTrue(shouldBeIsocsceles.equals(TriangleClassificationEnum.ISOCSCELES.getClassification()));
+	}
 
-        shouldBeFalse = triangleClassifier.areArguementsValid(values);
+	@Test
+	public void testIsoscelesThree() {
 
-        // Assert
-        assertFalse(shouldBeFalse);
-    }
+		// Assign
 
-    @Test
-    public void testValidatorWithMissingValue() {
+		double sideLengthA = 10;
+		double sideLengthB = 10;
+		double sideLengthC = 8;
 
-        // A logger error message will be generated.
+		Triangle triangle = new Triangle(sideLengthA, sideLengthB, sideLengthC);
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
 
-        // Assign
-        final String sideOne = "8";
-        final String sideTwo = "9";
+		// Act
 
-        String[] values = new String[2];
-        values[0] = sideOne;
-        values[1] = sideTwo;
+		String shouldBeIsocsceles = null;
 
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
+		try {
 
-        // Act
-        boolean shouldBeFalse = true;
+			shouldBeIsocsceles = triangleClassifier.generateTriangleClassificationEnum(triangle).getClassification();
+		}
 
-        shouldBeFalse = triangleClassifier.areArguementsValid(values);
+		catch (InvalidArguementsException e) {
 
-        // Assert
-        assertFalse(shouldBeFalse);
-    }
-    
-    @Test
-    public void testValidatorWithNotNumeric() {
+			boolean shouldBeTrueAndFail = true;
+			assertFalse(shouldBeTrueAndFail);
+		}
 
-        // A logger error message will be generated.
+		// Assert
 
-        // Assign
-        final String sideOne = "8";
-        final String sideTwo = "9";
-        final String sideThree = "Nine";
+		assertTrue(shouldBeIsocsceles.equals(TriangleClassificationEnum.ISOCSCELES.getClassification()));
+	}
 
-        String[] values = new String[3];
-        values[0] = sideOne;
-        values[1] = sideTwo;
-        values[2] = sideThree;
+	@Test
+	public void testScalene() {
 
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
+		// Assign
 
-        // Act
-        boolean shouldBeFalse = true;
+		double sideLengthA = 8;
+		double sideLengthB = 9;
+		double sideLengthC = 10;
 
-        shouldBeFalse = triangleClassifier.areArguementsValid(values);
+		Triangle triangle = new Triangle(sideLengthA, sideLengthB, sideLengthC);
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
 
-        // Assert
-        assertFalse(shouldBeFalse);
-    }
+		// Act
 
-    @Test(expected = InvalidArguementsException.class)
-    public void testRunMainToThrowException() throws InvalidArguementsException {
-        
-        // A logger error message will be generated.
+		String shouldBeScalene = null;
 
-        // Assign
-        final String sideOne = "8";
-        final String sideTwo = "9";
+		try {
 
-        String[] values = new String[2];
-        values[0] = sideOne;
-        values[1] = sideTwo;
+			shouldBeScalene = triangleClassifier.generateTriangleClassificationEnum(triangle).getClassification();
+		}
 
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
+		catch (InvalidArguementsException e) {
 
-        // Act
-        triangleClassifier.runMain(values);
+			boolean shouldBeTrueAndFail = true;
+			assertFalse(shouldBeTrueAndFail);
+		}
 
-        // Assert
-        // Should throw an InvalidArguementsException so assertion is not done
-        // here.
-    }
+		// Assert
 
-    @Test
-    public void testFormatArguements() {
-        
-        // Assign
-        final String sideOne = "8";
-        final String sideTwo = "9";
-        final String sideThree = "0";
+		assertTrue(shouldBeScalene.equals(TriangleClassificationEnum.SCALENE.getClassification()));
+	}
 
-        String[] values = new String[3];
-        values[0] = sideOne;
-        values[1] = sideTwo;
-        values[2] = sideThree;
+	@Test
+	public void testNotATriangle() {
 
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
+		// Assign
 
-        // Act
-        String shouldNotBeNullOrEmpty = triangleClassifier
-                .formatArguements(values);
+		double sideLengthA = 8;
+		double sideLengthB = 9;
+		double sideLengthC = 100;
 
-        // Assert
-        assertTrue(shouldNotBeNullOrEmpty != null);
-        assertTrue(shouldNotBeNullOrEmpty.length() > 0);
-    }
+		Triangle triangle = new Triangle(sideLengthA, sideLengthB, sideLengthC);
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
 
-    @Test
-    public void testFormatUsage() {
+		// Act
 
-        // Assign
-        TriangleClassifier triangleClassifier = new TriangleClassifier();
+		String shouldBeNotATriangle = null;
 
-        // Act
-        String shouldNotBeNullOrEmpty = triangleClassifier.formatUsage();
+		try {
 
-        // Assert
-        assertTrue(shouldNotBeNullOrEmpty != null);
-        assertTrue(shouldNotBeNullOrEmpty.length() > 0);
-    }
+			shouldBeNotATriangle = triangleClassifier.generateTriangleClassificationEnum(triangle).getClassification();
+		}
+
+		catch (InvalidArguementsException e) {
+
+			boolean shouldBeTrue = true;
+			assertFalse(shouldBeTrue);
+		}
+
+		// Assert
+
+		assertTrue(shouldBeNotATriangle.equals(TriangleClassificationEnum.NOT_A_TRIANGLE.getClassification()));
+	}
+
+	@Test
+	public void testAreaOfZeroIsATriangle() {
+
+		// Assign
+
+		double sideLengthA = 1;
+		double sideLengthB = 2;
+		double sideLengthC = 3;
+
+		Triangle triangle = new Triangle(sideLengthA, sideLengthB, sideLengthC);
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
+
+		// Act
+
+		String shouldBeScalene = null;
+
+		try {
+
+			shouldBeScalene = triangleClassifier.generateTriangleClassificationEnum(triangle).getClassification();
+		}
+
+		catch (InvalidArguementsException e) {
+
+			boolean shouldBeTrue = true;
+			assertFalse(shouldBeTrue);
+		}
+
+		// Assert
+
+		assertTrue(shouldBeScalene.equals(TriangleClassificationEnum.SCALENE.getClassification()));
+	}
+
+	@Test
+	public void testZeroShouldNotBeATriangle() {
+
+		// Assign
+
+		double sideLengthA = 8;
+		double sideLengthB = 9;
+		double sideLengthC = 0.0;
+
+		Triangle triangle = new Triangle(sideLengthA, sideLengthB, sideLengthC);
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
+
+		// Act
+
+		String shouldBeNotATriangle = null;
+
+		try {
+
+			shouldBeNotATriangle = triangleClassifier.generateTriangleClassificationEnum(triangle).getClassification();
+		}
+
+		catch (InvalidArguementsException e) {
+
+			boolean shouldBeTrue = true;
+			assertFalse(shouldBeTrue);
+		}
+
+		// Assert
+
+		assertTrue(shouldBeNotATriangle.equals(TriangleClassificationEnum.NOT_A_TRIANGLE.getClassification()));
+	}
+	
+	// Needs to be fixed
+
+	/*@Test(expected = InvalidArguementsException.class)
+	public void testIncorrectNumberOfValuesShouldNotBeATriangle() {
+
+		// Assign
+
+		double sideLengthA = 8;
+		double sideLengthB = 9;
+		Double sideLengthC = null;
+
+		Triangle triangle = new Triangle(sideLengthA, sideLengthB, sideLengthC);
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
+		
+		logger.warn("got here 1");
+
+		// Act
+
+		String shouldBeNotATriangle = null;
+
+		try {
+
+			TriangleClassificationEnum triangleClassificationEnum = null;
+
+			triangleClassificationEnum = triangleClassifier.generateTriangleClassificationEnum(triangle);
+
+			shouldBeNotATriangle = triangleClassificationEnum.getClassification();
+		}
+
+		catch (InvalidArguementsException e) {
+
+			boolean shouldBeTrueAndFail = true;
+			assertFalse(shouldBeTrueAndFail);
+		}
+
+		// Assert
+
+		// This should not execute because an exception was thrown.
+
+		boolean shouldBeTrueAndFail = true;
+		assertFalse(shouldBeTrueAndFail);
+	}*/
+
+	@Test
+	public void testValidatorSuccess() {
+
+		// Assign
+
+		final String sideOne = "8";
+		final String sideTwo = "9";
+		final String sideThree = "10";
+
+		String[] values = { sideOne, sideTwo, sideThree };
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
+
+		// Act
+
+		boolean shouldBeTrue = false;
+		shouldBeTrue = triangleClassifier.areArguementsValid(values);
+
+		// Assert
+
+		assertTrue(shouldBeTrue);
+	}
+
+	@Test
+	public void testValidatorWithZero() {
+
+		// A logger error message will be generated.
+
+		// Assign
+
+		final String sideOne = "8";
+		final String sideTwo = "9";
+		final String sideThree = "0";
+
+		String[] values = { sideOne, sideTwo, sideThree };
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
+
+		// Act
+
+		boolean shouldBeFalse = true;
+
+		shouldBeFalse = triangleClassifier.areArguementsValid(values);
+
+		// Assert
+
+		assertFalse(shouldBeFalse);
+	}
+
+	@Test
+	public void testValidatorWithMissingValue() {
+
+		// A logger error message will be generated.
+
+		// Assign
+
+		final String sideOne = "8";
+		final String sideTwo = "9";
+
+		String[] values = { sideOne, sideTwo };
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
+
+		// Act
+
+		boolean shouldBeFalse = true;
+
+		shouldBeFalse = triangleClassifier.areArguementsValid(values);
+
+		// Assert
+
+		assertFalse(shouldBeFalse);
+	}
+
+	@Test
+	public void testValidatorWithNotNumeric() {
+
+		// A logger error message will be generated.
+
+		// Assign
+
+		final String sideOne = "8";
+		final String sideTwo = "9";
+		final String sideThree = "Nine";
+
+		String[] values = { sideOne, sideTwo, sideThree };
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
+
+		// Act
+
+		boolean shouldBeFalse = true;
+
+		shouldBeFalse = triangleClassifier.areArguementsValid(values);
+
+		// Assert
+
+		assertFalse(shouldBeFalse);
+	}
+
+	@Test(expected = InvalidArguementsException.class)
+	public void testRunMainToThrowException() throws InvalidArguementsException {
+
+		// A logger error message will be generated.
+
+		// Assign
+
+		final String sideOne = "8";
+		final String sideTwo = "9";
+
+		String[] values = { sideOne, sideTwo };
+		TriangleClassifier triangleClassifier = new TriangleClassifier();
+
+		// Act
+
+		triangleClassifier.runMain(values);
+
+		// Assert
+
+		// This should not execute because an exception was thrown.
+
+		boolean shouldBeTrueAndFail = true;
+		assertFalse(shouldBeTrueAndFail);
+	}
 }

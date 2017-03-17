@@ -1,0 +1,8 @@
+us\flexion\challenge\coding\developer\triangle_classifier\util\ConversionUtil.class
+us\flexion\challenge\coding\developer\triangle_classifier\TriangleClassifier.class
+us\flexion\challenge\coding\developer\triangle_classifier\shape\Triangle.class
+us\flexion\challenge\coding\developer\triangle_classifier\util\MessageFormatter.class
+us\flexion\challenge\coding\developer\triangle_classifier\exception\InvalidArguementsException.class
+us\flexion\challenge\coding\developer\triangle_classifier\shape\ShapeSide.class
+us\flexion\challenge\coding\developer\triangle_classifier\shape\Shape.class
+us\flexion\challenge\coding\developer\triangle_classifier\shape\TriangleClassificationEnum.class
