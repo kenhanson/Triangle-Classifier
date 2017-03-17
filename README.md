@@ -11,7 +11,7 @@ Triangle Classifier is a Maven project containing Java code. Use Maven to instal
 
 After installing Maven, download the project to your local computer into a new directory. For the sake of these instructions, the local path is assumed to be **C:\projects**.
 
-After downloading the project, unzip the downloaded contents to the same directory which creates a subdirectory named **Triangle-Classifier-master** with an additional subdirectory named **Triangle-Classifier-master**. At a command prompt navigate to the directory containing the pom file, such as **C:\projects\Triangle-Classifier-master\Triangle-Classifier-master\triangle-classifier** depending upon your local path to the downloaded project.
+After downloading the project, unzip the downloaded contents to the same directory which creates a subdirectory named **Triangle-Classifier-master** with an additional subdirectory named **Triangle-Classifier-master**. At a command prompt navigate to the directory containing the **pom.xml** file, such as **C:\projects\Triangle-Classifier-master\Triangle-Classifier-master\triangle-classifier** depending upon your local path to the downloaded project.
 
 Then install Triangle Classifier with the following Maven command:
 
