@@ -3,7 +3,7 @@ This is a developer coding challenge for Flexion.
 
 ## Installation
 
-### Download and Unzip
+### Downloading and Unzipping
 
 Download the project to your local computer into a new directory. For the sake of these instructions, the local path is assumed to be **C:\projects**. This will download a zip file named **Triangle-Classifier-master.zip**.
 
